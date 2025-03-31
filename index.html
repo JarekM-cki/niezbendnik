@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Wyników Strzelań 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00a8ff;
+            --secondary: #0097e6;
+            --accent: #00d2d3;
+            --accent-secondary: #5f27cd;
+            --background: #10131a;
+            --card-bg: #171b24;
+            --surface: #1e272e;
+            --text-primary: #ffffff;
+            --text-secondary: #c8d6e5;
+            --text-tertiary: #8395a7;
+            --success: #2ecc71;
+            --warning: #ff9f43;
+            --error: #ee5253;
+            --info: #54a0ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            transition: all 0.2s ease-in-out;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.6;
+            padding-bottom: 80px;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 168, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 50%, rgba(95, 39, 205, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 40% 80%, rgba(0, 210, 211, 0.05) 0%, transparent 30%);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 1.8rem 0;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            height: 130px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent-secondary));
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            padding-left: 2.8rem;
+            background-color: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 2.6rem;
+            color: var(--text-tertiary);
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 168, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #ff7f50 100%);
+            box-shadow: 0 2px 10px rgba(255, 159, 67, 0.3);
+        }
+
+        .btn-warning:hover {
+            box-shadow: 0 5px 15px rgba(255, 159, 67, 0.4);
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        .result-section {
+            margin-top: 1.5rem;
+            background-color: var(--surface);
+            border-radius: 8px;
+            padding: 1.2rem;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .rating-excellent { color: var(--success); }
+        .rating-good { color: var(--info); }
+        .rating-average { color: var(--warning); }
+        .rating-poor { color: var(--error); }
+
+        .details-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .details-content {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .weapon-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .weapon-btn {
+            flex: 1;
+            min-width: calc(33% - 8px);
+            background-color: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 0.7rem 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .weapon-btn:hover {
+            background-color: rgba(0, 168, 255, 0.1);
+        }
+
+        .weapon-btn.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 168, 255, 0.3);
+        }
+
+        .weapon-specs {
+            display: none;
+            opacity: 0;
+        }
+
+        .weapon-specs.active {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .spec-category {
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-category-title {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.05);
+        }
+
+        .spec-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .spec-item div:last-child {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .ammo-price-input {
+            width: 80px;
+            text-align: right;
+            background-color: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 0.4rem;
+            color: var(--text-primary);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--success) 0%, #27ae60 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-tertiary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background-color: rgba(0, 168, 255, 0.1);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .nav-item span {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .icon-blue { color: var(--primary); }
+        .icon-green { color: var(--success); }
+        .icon-orange { color: var(--warning); }
+        .icon-red { color: var(--error); }
+        .icon-purple { color: var(--accent-secondary); }
+        .icon-teal { color: var(--accent); }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (min-width: 768px) {
+            .container { max-width: 720px; }
+            .header { clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); height: 150px; padding: 2rem 0; }
+            .header h1 { font-size: 2.2rem; }
+            .card { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-decoration"></div>
+    <div class="header">
+        <h1><i class="fas fa-crosshairs icon-teal"></i> KALKULATOR WYNIKÓW STRZELAŃ</h1>
+        <p>2025 r.</p>
+    </div>
+
+    <div class="container">
+        <!-- Kalkulator wyników section -->
+        <div id="results-calculator" class="section active">
+            <div class="card glow">
+                <div class="form-group">
+                    <label for="shooters">Liczba strzelających:</label>
+                    <i class="fas fa-users icon-blue"></i>
+                    <input type="number" id="shooters" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="excellent">Oceny bardzo dobre:</label>
+                    <i class="fas fa-star icon-green"></i>
+                    <input type="number" id="excellent" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="good">Oceny dobre:</label>
+                    <i class="fas fa-thumbs-up icon-teal"></i>
+                    <input type="number" id="good" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="satisfactory">Oceny dostateczne:</label>
+                    <i class="fas fa-check icon-orange"></i>
+                    <input type="number" id="satisfactory" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="unsatisfactory">Oceny niedostateczne:</label>
+                    <i class="fas fa-thumbs-down icon-red"></i>
+                    <input type="number" id="unsatisfactory" min="0" placeholder="Podaj liczbę">
+                </div>
+                <button id="calculate-btn" class="btn">
+                    <i class="fas fa-calculator icon-purple"></i> Oblicz wyniki
+                </button>
+
+                <div id="results" class="result-section">
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-users icon-blue"></i> Liczba strzelających:</div>
+                        <div id="result-shooters" class="result-value">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-percentage icon-teal"></i> Procent wykonania:</div>
+                        <div id="result-percentage" class="result-value">0%</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-chart-line icon-orange"></i> Ocena średnia arytmetyczna:</div>
+                        <div id="result-average" class="result-value">0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-trophy icon-green"></i> Ocena ogólna:</div>
+                        <div id="result-rating" class="result-value">-</div>
+                    </div>
+
+                    <div id="details-container">
+                        <button id="details-btn" class="details-btn">
+                            <i class="fas fa-chevron-right"></i> Pokaż szczegóły
+                        </button>
+                        <div id="details-content" class="details-content">
+                            <p><strong>Szczegółowe obliczenia:</strong></p>
+                            <p>Ocenę wyszkolenia strzeleckiego ustala się na podstawie średniej arytmetycznej określonej z dokładnością do jednej setnej w następujący sposób:</p>
+                            <ul style="padding-left: 20px; margin: 10px 0;">
+                                <li>„bardzo dobra" (bdb) - średnia arytmetyczna wynosi co najmniej 4,51</li>
+                                <li>„dobra" (db) - średnia arytmetyczna wynosi co najmniej 3,51</li>
+                                <li>„dostateczna" (dst) - średnia arytmetyczna wynosi co najmniej 2,51</li>
+                            </ul>
+                            <div id="calculation-details"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zużycie amunicji section -->
+        <div id="ammo-usage" class="section">
+            <div class="card glow">
+                <div class="form-group">
+                    <label for="ammo-type">Rodzaj amunicji:</label>
+                    <i class="fas fa-bullseye icon-blue"></i>
+                    <select id="ammo-type">
+                        <option value="5.56x45">5,56×45 mm NATO</option>
+                        <option value="7.62x51">7.62×51 mm NATO</option>
+                        <option value="9x18">9×18 mm Makarowa</option>
+                        <option value="9x19">9×19 mm Parabellum</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ammo-shooters">Liczba strzelców:</label>
+                    <i class="fas fa-user-alt icon-teal"></i>
+                    <input type="number" id="ammo-shooters" min="1" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="shots-per-shooter">Liczba strzałów na strzelca:</label>
+                    <i class="fas fa-bullseye icon-purple"></i>
+                    <input type="number" id="shots-per-shooter" min="1" placeholder="Podaj liczbę">
+                </div>
+                <button id="calculate-regular-ammo-btn" class="btn">
+                    <i class="fas fa-calculator icon-green"></i> OBLICZ ZUŻYCIE AMUNICJI (BEZ SMUGOWEJ)
+                </button>
+                <button id="calculate-tracer-ammo-btn" class="btn btn-warning" style="margin-top: 10px;">
+                    <i class="fas fa-fire icon-orange"></i> OBLICZ ZUŻYCIE AMUNICJI (Z SMUGOWĄ)
+                </button>
+
+                <div id="ammo-results" class="result-section">
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-bullseye icon-blue"></i> Rodzaj amunicji:</div>
+                        <div id="result-ammo-type" class="result-value">5,56×45 mm NATO</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-users icon-teal"></i> Liczba strzelających:</div>
+                        <div id="result-ammo-shooters" class="result-value">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-arrow-right icon-purple"></i> Amunicja na osobę:</div>
+                        <div id="result-ammo-per-person" class="result-value">0 szt.</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-box icon-green"></i> Całkowita ilość amunicji:</div>
+                        <div id="result-ammo-total" class="result-value">0 szt.</div>
+                    </div>
+                    <div id="tracer-ammo-details" style="display: none;">
+                        <div class="result-item">
+                            <div class="result-label"><i class="fas fa-arrow-circle-right icon-teal"></i> Amunicja zwykła:</div>
+                            <div id="result-regular-ammo" class="result-value">0 szt.</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label"><i class="fas fa-fire icon-orange"></i> Amunicja smugowa:</div>
+                            <div id="result-tracer-ammo" class="result-value">0 szt.</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-tag icon-purple"></i> Cena za sztukę:</div>
+                        <div id="result-ammo-price" class="result-value">2.50 zł</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-wallet icon-green"></i> Całkowity koszt amunicji:</div>
+                        <div id="result-total-cost" class="result-value">0.00 zł</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glow" style="margin-top: 20px;">
+                <div style="color: var(--primary); font-weight: bold; margin-bottom: 15px; display: flex; align-items: center;">
+                    <i class="fas fa-tags icon-blue" style="margin-right: 10px;"></i>
+                    <span>Cena amunicji</span>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-bullseye icon-teal"></i> 5,56×45 mm NATO</div>
+                    <div class="result-value" style="display: flex; align-items: center;">
+                        <input type="number" id="price-556" class="ammo-price-input" value="2.50" step="0.10" min="0"> 
+                        <span style="margin-left: 5px;">zł/szt.</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-bullseye icon-purple"></i> 7.62×51 mm NATO</div>
+                    <div class="result-value" style="display: flex; align-items: center;">
+                        <input type="number" id="price-762" class="ammo-price-input" value="3.80" step="0.10" min="0"> 
+                        <span style="margin-left: 5px;">zł/szt.</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-bullseye icon-orange"></i> 9×18 mm Makarowa</div>
+                    <div class="result-value" style="display: flex; align-items: center;">
+                        <input type="number" id="price-918" class="ammo-price-input" value="1.30" step="0.10" min="0"> 
+                        <span style="margin-left: 5px;">zł/szt.</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-bullseye icon-green"></i> 9×19 mm Parabellum</div>
+                    <div class="result-value" style="display: flex; align-items: center;">
+                        <input type="number" id="price-919" class="ammo-price-input" value="1.10" step="0.10" min="0"> 
+                        <span style="margin-left: 5px;">zł/szt.</span>
+                    </div>
+                </div>
+                <button id="save-prices-btn" class="btn" style="margin-top: 15px;">
+                    <i class="fas fa-save icon-teal"></i> Zapisz ceny
+                </button>
+            </div>
+        </div>
+
+        <!-- Strzelanie na celność i skupienie section -->
+        <div id="accuracy" class="section">
+            <div class="card glow">
+                <div class="form-group">
+                    <label for="shot-limit">Liczba strzałów:</label>
+                    <i class="fas fa-arrows-alt-h icon-purple"></i>
+                    <select id="shot-limit">
+                        <option value="5">5 strzałów</option>
+                        <option value="10">10 strzałów</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hits-10">Trafienia w 10:</label>
+                    <i class="fas fa-bullseye icon-red"></i>
+                    <input type="number" id="hits-10" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="hits-9">Trafienia w 9:</label>
+                    <i class="fas fa-dot-circle icon-orange"></i>
+                    <input type="number" id="hits-9" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="hits-8">Trafienia w 8:</label>
+                    <i class="fas fa-circle icon-teal"></i>
+                    <input type="number" id="hits-8" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="hits-7">Trafienia w 7:</label>
+                    <i class="fas fa-circle icon-blue"></i>
+                    <input type="number" id="hits-7" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="hits-6">Trafienia w 6:</label>
+                    <i class="fas fa-circle icon-purple"></i>
+                    <input type="number" id="hits-6" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="hits-5">Trafienia w 5:</label>
+                    <i class="fas fa-circle icon-green"></i>
+                    <input type="number" id="hits-5" min="0" placeholder="Podaj liczbę">
+                </div>
+                <div class="form-group">
+                    <label for="hits-4">Trafienia w 4:</label>
+                    <i class="fas fa-circle icon-orange"></i>
+                    <input type="number" id="hits-4" min="0" placeholder="Podaj liczbę">
+                </div>
+                <button id="calculate-points-btn" class="btn">
+                    <i class="fas fa-calculator icon-teal"></i> Oblicz punkty
+                </button>
+
+                <div id="accuracy-results" class="result-section">
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-star icon-green"></i> Suma punktów:</div>
+                        <div id="result-total-points" class="result-value">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-bullseye icon-red"></i> Liczba trafień:</div>
+                        <div id="result-total-hits" class="result-value">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="fas fa-chart-bar icon-purple"></i> Średnia na strzał:</div>
+                        <div id="result-average-points" class="result-value">0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dane taktyczno-techniczne section -->
+        <div id="specs" class="section">
+            <div class="card glow">
+                <div style="color: var(--primary); font-weight: bold; margin-bottom: 15px; display: flex; align-items: center;">
+                    <i class="fas fa-info-circle icon-blue" style="margin-right: 10px;"></i>
+                    <span>Dane taktyczno-techniczne</span>
+                </div>
+                
+                <div class="weapon-nav">
+                    <button class="weapon-btn active" data-weapon="ukm2000p"><i class="fas fa-gun icon-purple"></i> UKM 2000P</button>
+                    <button class="weapon-btn" data-weapon="msbs-grot"><i class="fas fa-gun icon-teal"></i> MSBS GROT</button>
+                    <button class="weapon-btn" data-weapon="beryl"><i class="fas fa-gun icon-green"></i> BERYL</button>
+                    <button class="weapon-btn" data-weapon="vis100"><i class="fas fa-pistol icon-orange"></i> VIS 100</button>
+                    <button class="weapon-btn" data-weapon="pw94"><i class="fas fa-pistol icon-red"></i> PW 94 / WIST</button>
+                    <button class="weapon-btn" data-weapon="p83"><i class="fas fa-pistol icon-blue"></i> P-83</button>
+                </div>
+                
+                <!-- UKM 2000P Specs -->
+                <div id="ukm2000p-specs" class="weapon-specs active">
+                    <div class="spec-category">
+                        <div class="spec-category-title">DANE TAKTYCZNO-TECHNICZNE BRONI</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Kaliber broni:</div>
+                            <div>7,62 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zastosowany nabój:</div>
+                            <div>7,62 x 51 mm NATO</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość karabinu UKM 2000P:</div>
+                            <div>1182 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość z kolbą wysuniętą:</div>
+                            <div>1228 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość z kolbą wsuniętą:</div>
+                            <div>1158 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość lufy broni:</div>
+                            <div>540 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Liczba bruzd:</div>
+                            <div>4</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Skok bruzd:</div>
+                            <div>328 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość linii celowniczej:</div>
+                            <div>695 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa broni:</div>
+                            <div>8,4 kg/10,2 kg</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa lufy:</div>
+                            <div>2,25 kg</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pojemność skrzynki amunicyjnej:</div>
+                            <div>100 naboi, taśma</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa skrzynki (200 naboi):</div>
+                            <div>3,9 kg</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa pojemnika (100 naboi):</div>
+                            <div>3,5 kg</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasięg skuteczny:</div>
+                            <div>100-1000 m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasięg maksymalny:</div>
+                            <div>1500 m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Prędkość początkowa pocisku:</div>
+                            <div>840 m/s</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Energia początkowa pocisku:</div>
+                            <div>3330 J</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szybkostrzelność teoretyczna:</div>
+                            <div>700-900 strz./min.</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szybkostrzelność praktyczna:</div>
+                            <div>do 250 strz./min.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MSBS GROT Specs -->
+                <div id="msbs-grot-specs" class="weapon-specs">
+                    <div class="spec-category">
+                        <div class="spec-category-title">DANE TECHNICZNE</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Amunicja:</div>
+                            <div>5.56 x 45 mm NATO</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Prędkość wylotowa:</div>
+                            <div>V0 = 890 m/s</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Energia wylotowa:</div>
+                            <div>1600 J</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasada działania:</div>
+                            <div>odprowadzenie gazów przez boczny otwór w lufie</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Rodzaj ognia:</div>
+                            <div>pojedynczy, ciągły</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szybkostrzelność teoretyczna:</div>
+                            <div>700÷900 strz./min.</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasięg:</div>
+                            <div>~500 m</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">WYMIARY</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość z kolbą wysuniętą:</div>
+                            <div>900 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość z kolbą złożoną:</div>
+                            <div>843 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Wersja bezkolbowa:</div>
+                            <div>675 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość lufy:</div>
+                            <div>406 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Liczba i skok bruzd w lufie:</div>
+                            <div>6 / 178 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Przyrządy celownicze:</div>
+                            <div>mechaniczne i optoelektroniczne przyłączane do szyny Picatinny</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">MASA</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa broni bez magazynka (wersja klasyczna):</div>
+                            <div>3650 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa broni bez magazynka (wersja bull-pup):</div>
+                            <div>3750 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pojemność magazynka:</div>
+                            <div>30, 60 naboi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BERYL Specs -->
+                <div id="beryl-specs" class="weapon-specs">
+                    <div class="spec-category">
+                        <div class="spec-category-title">DANE TECHNICZNE</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Amunicja:</div>
+                            <div>5,56 x 45 mm NATO</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Prędkość wylotowa dla pocisku SS109:</div>
+                            <div>V0 = 920 m/s</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Energia wylotowa dla pocisku SS109:</div>
+                            <div>E0 = 1690 J</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Rodzaj ognia:</div>
+                            <div>pojedynczy, seria 3-strzałowa, ciągły</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szybkostrzelność teoretyczna:</div>
+                            <div>700 strz./min.</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Donośność skuteczna:</div>
+                            <div>600 m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zakres nastaw celownika:</div>
+                            <div>100 – 1000 m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pojemność magazynka:</div>
+                            <div>30 naboi</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasada działania:</div>
+                            <div>odprowadzanie gazów przez boczny otwór w lufie</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Liczba bruzd w lufie:</div>
+                            <div>6</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Skok gwintu lufy:</div>
+                            <div>228 mm</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">WYMIARY</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość z kolbą rozłożoną:</div>
+                            <div>980 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość z kolbą złożoną:</div>
+                            <div>910 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość lufy:</div>
+                            <div>457 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość linii celowniczej:</div>
+                            <div>372 mm</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">MASY</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Karabin bez magazynka:</div>
+                            <div>ok. 3650 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Magazynek 30-nabojowy pusty:</div>
+                            <div>ok. 185 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Magazynek 30-nabojowy załadowany:</div>
+                            <div>ok. 554 g</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIS 100 Specs -->
+                <div id="vis100-specs" class="weapon-specs">
+                    <div class="spec-category">
+                        <div class="spec-category-title">DANE TECHNICZNE</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Kaliber:</div>
+                            <div>9 x 19 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasada działania:</div>
+                            <div>Krótki odrzut lufy, ryglowanej przez przekoszenie lufy</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">System spustu:</div>
+                            <div>Single Action / Double Action</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Siła spustu:</div>
+                            <div>SA/DA 25N/50N</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Droga spustu:</div>
+                            <div>ok. 14 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pojemność magazynka:</div>
+                            <div>15 nabojów</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">WYMIARY</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Wysokość bez magazynka:</div>
+                            <div>136 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Wysokość z magazynkiem:</div>
+                            <div>142 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość:</div>
+                            <div>197 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szerokość:</div>
+                            <div>32 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość lufy:</div>
+                            <div>110 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Skok gwintu lufy:</div>
+                            <div>250 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość linii celowania:</div>
+                            <div>156 mm</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">MASA I PARAMETRY BALISTYCZNE</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa pistoletu bez magazynka:</div>
+                            <div>695 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa magazynka pustego:</div>
+                            <div>90 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Prędkość wylotowa pocisku:</div>
+                            <div>~360 m/s</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Energia wylotowa pocisku:</div>
+                            <div>~518 J</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zasięg zagrożenia:</div>
+                            <div>ok. 2000 m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Taktyczny zasięg rażenia:</div>
+                            <div>ok. 150 m</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">CELNOŚĆ I ZABEZPIECZENIA</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Skupienie na odległości 25 m:</div>
+                            <div>≤ 14 cm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Odległość śr. punktu trafień od pkt. kontrolnego:</div>
+                            <div>≤ 5 cm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Przyrządy celownicze:</div>
+                            <div>otwarte, szczerbinkowe, wyregulowane na 25 m, kontrastowe / trytowe</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zabezpieczenia:</div>
+                            <div>Automatyczna wewnętrzna blokada iglicy sterowana spustem, zwalniacz kurka, przerywacz</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Mechanizm spustowo-uderzeniowy:</div>
+                            <div>SA/DA (z kurkiem zewnętrznym)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PW 94 / WIST Specs -->
+                <div id="pw94-specs" class="weapon-specs">
+                    <div class="spec-category">
+                        <div class="spec-category-title">PODSTAWOWE DANE TAKTYCZNO-TECHNICZNE BRONI</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Kaliber broni:</div>
+                            <div>9 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zastosowany nabój:</div>
+                            <div>9 x 19 mm Parabellum</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość broni:</div>
+                            <div>190 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Wysokość broni:</div>
+                            <div>135 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szerokość broni:</div>
+                            <div>33 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość lufy:</div>
+                            <div>114 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Liczba bruzd prawoskrętnych:</div>
+                            <div>6</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Skok bruzd:</div>
+                            <div>252 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa broni bez magazynka:</div>
+                            <div>660 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa magazynka niezaładowanego:</div>
+                            <div>80 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa broni załadowanej:</div>
+                            <div>940 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość linii celowniczej:</div>
+                            <div>171 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pojemność magazynka:</div>
+                            <div>16 sztuk naboi</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Odległość celowania:</div>
+                            <div>25 metrów</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Prędkość początkowa wystrzelonego pocisku:</div>
+                            <div>360 m/s</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Energia początkowa wystrzelonego pocisku:</div>
+                            <div>518 J</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szybkostrzelność praktyczna:</div>
+                            <div>16 strz./8-12 sek.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- P-83 Specs -->
+                <div id="p83-specs" class="weapon-specs">
+                    <div class="spec-category">
+                        <div class="spec-category-title">WYMIARY</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość całkowita:</div>
+                            <div>165 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Wysokość:</div>
+                            <div>125 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Szerokość:</div>
+                            <div>30 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość lufy:</div>
+                            <div>90 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Długość linii celowniczej:</div>
+                            <div>120 mm</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">MASA</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pistolet z pustym magazynkiem:</div>
+                            <div>730 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Magazynek pusty:</div>
+                            <div>0,05 kg (50 g)</div>
+                        </div>
+                    </div>
+                    <div class="spec-category">
+                        <div class="spec-category-title">INNE</div>
+                        <div class="spec-item">
+                            <div class="spec-label">Nabój:</div>
+                            <div>9x18 mm Makarow</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa naboju:</div>
+                            <div>9,7 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Masa pocisku:</div>
+                            <div>6 g</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Prędkość początkowa pocisku:</div>
+                            <div>312 m/s</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Zabezpieczenie:</div>
+                            <div>blokada iglicy, zwolnienie i blokada kurka</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pojemność magazynka:</div>
+                            <div>8 szt.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Ceny zostały zapisane pomyślnie!</div>
+
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active" data-section="results-calculator">
+            <i class="fas fa-calculator icon-blue"></i>
+            <span>Kalkulator</span>
+        </a>
+        <a href="#" class="nav-item" data-section="ammo-usage">
+            <i class="fas fa-bullseye icon-orange"></i>
+            <span>Amunicja</span>
+        </a>
+        <a href="#" class="nav-item" data-section="accuracy">
+            <i class="fas fa-crosshairs icon-green"></i>
+            <span>Celność</span>
+        </a>
+        <a href="#" class="nav-item" data-section="specs">
+            <i class="fas fa-info-circle icon-purple"></i>
+            <span>Dane</span>
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+        });
+
+        function initApp() {
+            const navigationItems = document.querySelectorAll('.nav-item');
+            const allSections = document.querySelectorAll('.section');
+            const weaponButtons = document.querySelectorAll('.weapon-btn');
+            const weaponSpecs = document.querySelectorAll('.weapon-specs');
+
+            initNavigation(navigationItems, allSections);
+            initResultsCalculator();
+            initAmmoCalculator();
+            initAccuracyCalculator();
+            initTechnicalSpecs(weaponButtons, weaponSpecs);
+            initDetailsToggle();
+            hideResultSections();
+        }
+
+        function initNavigation(navItems, sections) {
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+
+                    sections.forEach(section => {
+                        if (section.classList.contains('active')) {
+                            section.style.opacity = '0';
+                            section.style.transform = 'translateY(10px)';
+                            setTimeout(() => {
+                                section.classList.remove('active');
+                                const targetSection = document.getElementById(sectionId);
+                                if (targetSection) {
+                                    targetSection.classList.add('active');
+                                    targetSection.style.opacity = '0';
+                                    targetSection.style.transform = 'translateY(10px)';
+                                    setTimeout(() => {
+                                        targetSection.style.opacity = '1';
+                                        targetSection.style.transform = 'translateY(0)';
+                                    }, 50);
+                                }
+                            }, 300);
+                        }
+                    });
+
+                    navItems.forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        function initResultsCalculator() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            if (calculateBtn) {
+                calculateBtn.addEventListener('click', function() {
+                    this.innerHTML = '<span class="loader"></span> Obliczanie...';
+                    setTimeout(() => {
+                        const shooters = parseInt(document.getElementById('shooters').value) || 0;
+                        const excellent = parseInt(document.getElementById('excellent').value) || 0;
+                        const good = parseInt(document.getElementById('good').value) || 0;
+                        const satisfactory = parseInt(document.getElementById('satisfactory').value) || 0;
+                        const unsatisfactory = parseInt(document.getElementById('unsatisfactory').value) || 0;
+
+                        const totalGrades = excellent + good + satisfactory + unsatisfactory;
+                        if (totalGrades !== shooters) {
+                            alert('Suma ocen powinna być równa liczbie strzelających!');
+                            this.innerHTML = '<i class="fas fa-calculator icon-purple"></i> Oblicz wyniki';
+                            return;
+                        }
+
+                        const successfulShooters = excellent + good + satisfactory;
+                        const percentage = (successfulShooters / shooters * 100).toFixed(2);
+                        const weightedSum = excellent * 5 + good * 4 + satisfactory * 3 + unsatisfactory * 2;
+                        const average = (weightedSum / shooters).toFixed(2);
+
+                        let rating = '', ratingClass = '';
+                        if (average >= 4.51) {
+                            rating = 'bardzo dobra (bdb)';
+                            ratingClass = 'rating-excellent';
+                        } else if (average >= 3.51) {
+                            rating = 'dobra (db)';
+                            ratingClass = 'rating-good';
+                        } else if (average >= 2.51) {
+                            rating = 'dostateczna (dst)';
+                            ratingClass = 'rating-average';
+                        } else {
+                            rating = 'niedostateczna (ndst)';
+                            ratingClass = 'rating-poor';
+                        }
+
+                        document.getElementById('result-shooters').textContent = shooters;
+                        document.getElementById('result-percentage').textContent = percentage + '%';
+                        document.getElementById('result-average').textContent = average;
+                        document.getElementById('result-rating').textContent = rating;
+                        document.getElementById('result-rating').className = 'result-value ' + ratingClass;
+
+                        const calculationDetails = document.getElementById('calculation-details');
+                        if (calculationDetails) {
+                            calculationDetails.innerHTML = `
+                                <p>Obliczenia:</p>
+                                <p>Liczba strzelających: ${shooters}</p>
+                                <p>Oceny bardzo dobre (5): ${excellent}</p>
+                                <p>Oceny dobre (4): ${good}</p>
+                                <p>Oceny dostateczne (3): ${satisfactory}</p>
+                                <p>Oceny niedostateczne (2): ${unsatisfactory}</p>
+                                <p>Oceny pozytywne: ${successfulShooters}</p>
+                                <p>Procent wykonania: ${successfulShooters} / ${shooters} × 100% = ${percentage}%</p>
+                                <p>Średnia arytmetyczna: (${excellent} × 5 + ${good} × 4 + ${satisfactory} × 3 + ${unsatisfactory} × 2) / ${shooters} = ${average}</p>
+                            `;
+                        }
+
+                        const results = document.getElementById('results');
+                        if (results) {
+                            results.style.display = 'block';
+                            results.style.opacity = '0';
+                            setTimeout(() => {
+                                results.style.opacity = '1';
+                            }, 50);
+                        }
+
+                        this.innerHTML = '<i class="fas fa-calculator icon-purple"></i> Oblicz wyniki';
+                    }, 800);
+                });
+            }
+        }
+
+        function initAmmoCalculator() {
+            const ammoPrices = {
+                '5.56x45': 2.50,
+                '7.62x51': 3.80,
+                '9x18': 1.30,
+                '9x19': 1.10
+            };
+
+            const calculateRegularAmmoBtn = document.getElementById('calculate-regular-ammo-btn');
+            if (calculateRegularAmmoBtn) {
+                calculateRegularAmmoBtn.addEventListener('click', function() {
+                    this.innerHTML = '<span class="loader"></span> Obliczanie...';
+                    setTimeout(() => {
+                        calculateAmmoUsage(false);
+                        this.innerHTML = '<i class="fas fa-calculator icon-green"></i> OBLICZ ZUŻYCIE AMUNICJI (BEZ SMUGOWEJ)';
+                    }, 800);
+                });
+            }
+
+            const calculateTracerAmmoBtn = document.getElementById('calculate-tracer-ammo-btn');
+            if (calculateTracerAmmoBtn) {
+                calculateTracerAmmoBtn.addEventListener('click', function() {
+                    this.innerHTML = '<span class="loader"></span> Obliczanie...';
+                    setTimeout(() => {
+                        calculateAmmoUsage(true);
+                        this.innerHTML = '<i class="fas fa-fire icon-orange"></i> OBLICZ ZUŻYCIE AMUNICJI (Z SMUGOWĄ)';
+                    }, 800);
+                });
+            }
+
+            const savePricesBtn = document.getElementById('save-prices-btn');
+            if (savePricesBtn) {
+                savePricesBtn.addEventListener('click', function() {
+                    this.innerHTML = '<span class="loader"></span> Zapisywanie...';
+                    setTimeout(() => {
+                        const price556Input = document.getElementById('price-556');
+                        const price762Input = document.getElementById('price-762');
+                        const price918Input = document.getElementById('price-918');
+                        const price919Input = document.getElementById('price-919');
+
+                        if (price556Input) ammoPrices['5.56x45'] = parseFloat(price556Input.value) || 2.50;
+                        if (price762Input) ammoPrices['7.62x51'] = parseFloat(price762Input.value) || 3.80;
+                        if (price918Input) ammoPrices['9x18'] = parseFloat(price918Input.value) || 1.30;
+                        if (price919Input) ammoPrices['9x19'] = parseFloat(price919Input.value) || 1.10;
+
+                        showToast('Ceny zostały zapisane pomyślnie!');
+                        this.innerHTML = '<i class="fas fa-save icon-teal"></i> Zapisz ceny';
+                    }, 600);
+                });
+            }
+
+            function calculateAmmoUsage(withTracer) {
+                const ammoShooters = parseInt(document.getElementById('ammo-shooters').value) || 0;
+                const shotsPerShooter = parseInt(document.getElementById('shots-per-shooter').value) || 0;
+
+                if (ammoShooters <= 0 || shotsPerShooter <= 0) {
+                    alert('Liczba strzelców i strzałów musi być większa od zera!');
+                    return;
+                }
+
+                const totalAmmo = ammoShooters * shotsPerShooter;
+                let regularAmmo = totalAmmo;
+                let tracerAmmo = 0;
+
+                if (withTracer) {
+                    regularAmmo = 0;
+                    tracerAmmo = 0;
+                    for (let i = 1; i <= totalAmmo; i++) {
+                        if (i % 3 === 0) tracerAmmo++;
+                        else regularAmmo++;
+                    }
+                }
+
+                const ammoTypeSelect = document.getElementById('ammo-type');
+                let ammoType = '5.56x45', ammoTypeText = '5,56×45 mm NATO', pricePerRound = 2.50;
+                if (ammoTypeSelect) {
+                    ammoType = ammoTypeSelect.value;
+                    switch(ammoType) {
+                        case '5.56x45':
+                            ammoTypeText = '5,56×45 mm NATO';
+                            pricePerRound = ammoPrices['5.56x45'];
+                            break;
+                        case '7.62x51':
+                            ammoTypeText = '7.62×51 mm NATO';
+                            pricePerRound = ammoPrices['7.62x51'];
+                            break;
+                        case '9x18':
+                            ammoTypeText = '9×18 mm Makarowa';
+                            pricePerRound = ammoPrices['9x18'];
+                            break;
+                        case '9x19':
+                            ammoTypeText = '9×19 mm Parabellum';
+                            pricePerRound = ammoPrices['9x19'];
+                            break;
+                    }
+                }
+
+                const totalCost = (totalAmmo * pricePerRound).toFixed(2);
+
+                animateResult('result-ammo-type', ammoTypeText);
+                animateResult('result-ammo-shooters', ammoShooters);
+                animateResult('result-ammo-per-person', shotsPerShooter + ' szt.');
+                animateResult('result-ammo-total', totalAmmo + ' szt.');
+
+                const tracerAmmoDetails = document.getElementById('tracer-ammo-details');
+                if (tracerAmmoDetails) {
+                    if (withTracer) {
+                        tracerAmmoDetails.style.display = 'block';
+                        animateResult('result-regular-ammo', regularAmmo + ' szt.');
+                        animateResult('result-tracer-ammo', tracerAmmo + ' szt.');
+                    } else {
+                        tracerAmmoDetails.style.display = 'none';
+                    }
+                }
+
+                animateResult('result-ammo-price', pricePerRound.toFixed(2) + ' zł');
+                animateResult('result-total-cost', totalCost + ' zł');
+
+                const ammoResults = document.getElementById('ammo-results');
+                if (ammoResults) {
+                    ammoResults.style.display = 'block';
+                    ammoResults.style.opacity = '0';
+                    setTimeout(() => {
+                        ammoResults.style.opacity = '1';
+                    }, 50);
+                }
+            }
+
+            function animateResult(elementId, newValue) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.style.transition = 'color 0.3s';
+                    element.style.color = '#00d2d3';
+                    element.textContent = newValue;
+                    setTimeout(() => {
+                        element.style.color = '';
+                    }, 500);
+                }
+            }
+        }
+
+        function initAccuracyCalculator() {
+            const calculatePointsBtn = document.getElementById('calculate-points-btn');
+            if (!calculatePointsBtn) {
+                console.error("Przycisk 'calculate-points-btn' nie został znaleziony!");
+                return;
+            }
+
+            calculatePointsBtn.addEventListener('click', function() {
+                this.innerHTML = '<span class="loader"></span> Obliczanie...';
+                setTimeout(() => {
+                    const shotLimit = parseInt(document.getElementById('shot-limit').value) || 5;
+                    const hits10 = parseInt(document.getElementById('hits-10').value) || 0;
+                    const hits9 = parseInt(document.getElementById('hits-9').value) || 0;
+                    const hits8 = parseInt(document.getElementById('hits-8').value) || 0;
+                    const hits7 = parseInt(document.getElementById('hits-7').value) || 0;
+                    const hits6 = parseInt(document.getElementById('hits-6').value) || 0;
+                    const hits5 = parseInt(document.getElementById('hits-5').value) || 0;
+                    const hits4 = parseInt(document.getElementById('hits-4').value) || 0;
+
+                    const totalHits = hits10 + hits9 + hits8 + hits7 + hits6 + hits5 + hits4;
+                    if (totalHits > shotLimit) {
+                        alert(`Liczba trafień (${totalHits}) przekracza wybrany limit strzałów (${shotLimit})!`);
+                        this.innerHTML = '<i class="fas fa-calculator icon-teal"></i> Oblicz punkty';
+                        return;
+                    }
+
+                    const totalPoints = hits10 * 10 + hits9 * 9 + hits8 * 8 + hits7 * 7 + hits6 * 6 + hits5 * 5 + hits4 * 4;
+                    const averagePoints = totalHits > 0 ? (totalPoints / totalHits).toFixed(2) : "0.00";
+
+                    animateAccuracyResult('result-total-points', totalPoints);
+                    animateAccuracyResult('result-total-hits', totalHits);
+                    animateAccuracyResult('result-average-points', averagePoints);
+
+                    const accuracyResults = document.getElementById('accuracy-results');
+                    if (accuracyResults) {
+                        accuracyResults.style.display = 'block';
+                        accuracyResults.style.opacity = '0';
+                        setTimeout(() => {
+                            accuracyResults.style.opacity = '1';
+                        }, 50);
+                    } else {
+                        console.error("Sekcja 'accuracy-results' nie została znaleziona!");
+                    }
+
+                    this.innerHTML = '<i class="fas fa-calculator icon-teal"></i> Oblicz punkty';
+                }, 800);
+            });
+
+            function animateAccuracyResult(elementId, newValue) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.style.transition = 'color 0.3s';
+                    element.style.color = '#00d2d3';
+                    element.textContent = newValue;
+                    setTimeout(() => {
+                        element.style.color = '';
+                    }, 500);
+                } else {
+                    console.error(`Element '${elementId}' nie został znaleziony!`);
+                }
+            }
+        }
+
+        function initTechnicalSpecs(weaponButtons, weaponSpecs) {
+            weaponButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const weaponId = this.getAttribute('data-weapon');
+
+                    weaponSpecs.forEach(spec => {
+                        if (spec.classList.contains('active')) {
+                            spec.style.opacity = '0';
+                            spec.style.transition = 'opacity 0.3s';
+                            setTimeout(() => {
+                                spec.classList.remove('active');
+                                spec.style.display = 'none';
+                            }, 300);
+                        } else {
+                            spec.style.display = 'none';
+                        }
+                    });
+
+                    setTimeout(() => {
+                        const selectedSpec = document.getElementById(weaponId + '-specs');
+                        if (selectedSpec) {
+                            selectedSpec.style.display = 'block';
+                            selectedSpec.classList.add('active');
+                            selectedSpec.style.opacity = '0';
+                            selectedSpec.style.transition = 'opacity 0.3s';
+                            setTimeout(() => {
+                                selectedSpec.style.opacity = '1';
+                            }, 50);
+                        }
+                    }, 300);
+
+                    weaponButtons.forEach(weaponBtn => {
+                        weaponBtn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        function initDetailsToggle() {
+            const detailsBtn = document.getElementById('details-btn');
+            const detailsContent = document.getElementById('details-content');
+
+            if (detailsBtn && detailsContent) {
+                detailsBtn.addEventListener('click', function() {
+                    if (detailsContent.style.display === 'block') {
+                        detailsContent.style.opacity = '0';
+                        setTimeout(() => {
+                            detailsContent.style.display = 'none';
+                            detailsBtn.innerHTML = '<i class="fas fa-chevron-right"></i> Pokaż szczegóły';
+                        }, 300);
+                    } else {
+                        detailsContent.style.display = 'block';
+                        detailsContent.style.opacity = '0';
+                        setTimeout(() => {
+                            detailsContent.style.opacity = '1';
+                            detailsBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Ukryj szczegóły';
+                        }, 50);
+                    }
+                });
+            }
+        }
+
+        function hideResultSections() {
+            const results = document.getElementById('results');
+            const ammoResults = document.getElementById('ammo-results');
+            const accuracyResults = document.getElementById('accuracy-results');
+
+            if (results) results.style.display = 'none';
+            if (ammoResults) ammoResults.style.display = 'none';
+            if (accuracyResults) accuracyResults.style.display = 'none';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
